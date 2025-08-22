@@ -144,7 +144,9 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [ ] Priorizar quais módulos de memória e criatividade serão MVP
   - [x] Definir interface para memória episódica/semântica (vetor DB) e procedural — `services/memory/interface.md` (+ stub `services/memory/interface.py`)
 - Implementar
-  - [ ] Serviço de `memory` com operações básicas: store, query (RAG-friendly)
+- Implementar
+  - [x] Serviço de `memory` com operações básicas: store, query (RAG-friendly)
+    - Implementado em: `services/memory/service.py`, interface wrapper `services/memory/interface.py` e testes `services/memory/tests/test_memory.py`
   - [ ] Módulo criativo com interface para gerar candidatos (offline)
 - Testar
   - [ ] Validar recuperação de memórias relevantes (recall precision)
