@@ -4,6 +4,13 @@ Run this locally or in CI to ensure the `proto` package and stubs are importable
 """
 import sys
 import logging
+import os
+
+# Ensure repo root is on sys.path so `from proto import ...` works when this
+# script is executed as `python tools/check_protos_import.py` from the repo root.
+repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
 
 logger = logging.getLogger('cleo.tools.check_protos_import')
 logging.basicConfig(level=logging.INFO)
