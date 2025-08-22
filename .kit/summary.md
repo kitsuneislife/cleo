@@ -241,3 +241,28 @@ Julgamento por especialistas humanos sobre intencionalidade percebida, adaptabil
 ## Conclusão
 
 Este manifesto propõe uma arquitetura interdisciplinar para o Projeto Overpowered: uma mente híbrida (Soar + ACT-R) integrada com um modelo do mundo (V–M–C), planeamento hierárquico (HTN + GOAP), motivação intrínseca e princípios antifrágeis, suportada por microsserviços e avaliada por métricas multicamadas. O objetivo não é apenas superar humanos em tarefas, mas criar um agente cuja cognição, criatividade e falhas sejam plausivelmente humanas, servindo como plataforma de investigação para AGI.
+
+## Estado atual / Próximos passos
+
+Aqui está um resumo prático do estado de implementação (baseado em `.kit/development-checklist.md`) e as pendências priorizadas para guiar o trabalho de desenvolvimento:
+
+- Entregues (links úteis):
+	- Checklist atual: `.kit/development-checklist.md` (itens marcados e notas sobre o dataset sintético).
+	- Worldmodel: `examples/train_worldmodel.py`, `tools/validate_worldmodel.py`, `tools/calibrate_thresholds.py` — trainer, validador e calibrador já presentes.
+	- Dados de validação (sintéticos): `data/worldmodel/validation.jsonl` (committed) — usar apenas como smoke test até substituir por dataset representativo.
+	- Thresholds calibrados: `services/worldmodel/THRESHOLDS.json` — calibrado a partir do dataset sintético.
+	- Métricas de discrepância persistidas: `artifacts/metrics.json` (fluxo de validação/CI produz este artefato).
+	- CI: job `validate-and-promote` configurado em `.github/workflows/ci.yml` para rodar trainer + validator e promover checkpoints quando passar.
+
+- Pendências prioritárias (recomendado order):
+	1. Substituir `data/worldmodel/validation.jsonl` por um dataset representativo (ex.: conversão de subset MineRL) — RECOMENDADO antes de "large-scale training".
+	2. Definir plano de armazenamento e promoção de artefatos (S3 / MLFlow) e adicionar templates de secrets em `.kit/` (necessita decisão humana: provedor/credentials).
+	3. Habilitar métricas em staging (ENABLE_METRICS=1) e configurar scrape Prometheus para monitorar discrepância em produção/staging.
+	4. Decidir e validar caminho ONNX (export + equivalence tests) — adicionar testes de regressão de inferência.
+	5. Documentar runbook de treino e promoção (cotas de GPU, custos, rollback) em `.kit/`.
+
+Pequenas notas:
+- Os artefatos binários de treino (checkpoints) não são cometidos no repo; CI re-treina o modelo smoketest quando necessário.
+- Mantenha as marcações na checklist (ex.: "synthetic") para deixar claro o status dos artefatos até substituição por dados representativos.
+
+Se quiser, faço commits diretos com links e formatação adicional (tabelas por seção) — diga apenas `sim` para eu proceder.
