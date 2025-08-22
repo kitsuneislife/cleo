@@ -59,11 +59,11 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [ ] Planejar pipeline de treino (offline + sonhos) e datasets necessários
   - [ ] Documentar critérios de qualidade do modelo (MSE, likelihood, fidelidade de simulação)
 - Implementar
-  - [ ] Implementar serviço `worldmodel` com endpoints gRPC para predição e simulação
+  - [x] Implementar serviço `worldmodel` com endpoints gRPC para predição e simulação (toy predictor)
   - [ ] Implementar utilitário para gerar 'sonhos' (trajectórias simuladas)
-  - [ ] Tests unitários para modelos (shape/contratos) e integração com dados sintéticos
+  - [x] Tests unitários para modelos (shape/contratos) e integração com dados sintéticos
 - Testar
-  - [ ] Validar que o controlador obtém previsões coerentes em cenários simples
+  - [x] Validar que o controlador obtém previsões coerentes em cenários simples
   - [ ] Medir discrepância previsão vs realidade e registar como métrica
 - Robustecer
   - [ ] Exportar modelo para ONNX e validar inferência equivalência

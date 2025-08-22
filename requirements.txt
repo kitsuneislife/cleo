@@ -1,3 +1,7 @@
 pytest
 grpcio
 grpcio-tools
+fastapi
+uvicorn
+pydantic
+httpx

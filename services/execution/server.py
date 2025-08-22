@@ -15,8 +15,25 @@ class ExecutionServicer(control_pb2_grpc.ControlServiceServicer if control_pb2_g
     def ApplyAction(self, request, context):
         logging.info(f"Execution apply action: {request.operator_id}")
         if control_pb2:
+            # record action for tests/inspection
+            try:
+                if not hasattr(self, '_actions'):
+                    self._actions = []
+                self._actions.append((request.operator_id, request.params))
+            except Exception:
+                logging.exception('Failed to record action')
             return control_pb2.ActionAck(ok=True, message="executed")
         return None
+
+    def GetActions(self, request, context):
+        # helper RPC for tests to inspect recorded actions (not part of original proto)
+        class _Resp:
+            def __init__(self, actions):
+                self.actions = actions
+
+        actions = getattr(self, '_actions', [])
+        # return a minimal representation
+        return _Resp(actions)
 
 
 def serve(port=50064):
