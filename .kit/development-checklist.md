@@ -182,9 +182,13 @@ Para cada componente aplicar as 5 etapas do protocolo:
    - [ ] Dockerfiles por serviço
    - [x] Makefile com targets: `dev`, `test`, `build`
  - [x] Adicionar healthchecks e dependências no `docker-compose.yml` para ordenar inicialização e melhorar resiliência (adapter, control, worldmodel, minecraft)
+ - [x] Expor endpoint de readiness/health em `services/integration/adapter.py` (`GET /health`)
  - [ ] Criar templates de secrets e instruções para secret manager (ex.: HashiCorp Vault / AWS Secrets)
  - [ ] Implementar política de logs (Structured JSON) e evitar PII
  - [ ] Definir e documentar processo para ADRs
+
+Tarefas de ferramenta
+- [x] Criar `tools/check_protos_import.py` para validar imports dos stubs gerados
 
 ---
 
