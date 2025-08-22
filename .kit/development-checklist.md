@@ -34,8 +34,8 @@ Para cada componente aplicar as 5 etapas do protocolo:
 ## 1 Núcleo Cognitivo
 - Planejar
   - [ ] Definir escopo do núcleo (módulos: perceção, procedural, declarativa, buffers)
-  - [ ] Especificar APIs entre `control` e planeadores (gRPC `.proto`)
-  - [ ] Criar Definition of Ready com critérios de aceitação e benchmarks iniciais
+  - [x] Especificar APIs entre `control` e planeadores (gRPC `.proto`)
+  - [x] Criar Definition of Ready com critérios de aceitação e benchmarks iniciais
 - Implementar
   - [x] Esqueleto do serviço `services/control` com servidor gRPC
   - [x] Implementar ciclo de decisão mínimo (percepção → proposta → seleção → ação)
@@ -46,10 +46,10 @@ Para cada componente aplicar as 5 etapas do protocolo:
 - Robustecer
   - [x] Instrumentar métricas (latência, taxa de decisões por segundo) (opt-in via ENABLE_METRICS)
   - [x] Adicionar circuit-breaker e retries para chamadas externas (basic retry logic present in worldmodel call handling)
-  - [ ] Definir limites de recursos para containers
+  - [x] Definir limites de recursos para containers
 - Documentar
   - [x] README com contrato do serviço e exemplos de chamadas
-  - [ ] ADR se a implementação divergir do design híbrido Soar/ACT-R
+  - [x] ADR se a implementação divergir do design híbrido Soar/ACT-R
 
 ---
 
