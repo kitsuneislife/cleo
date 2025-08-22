@@ -78,7 +78,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
     ```
     Valide acessando `http://localhost:8000/metrics` após iniciar o serviço.
   - [x] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
-  - [ ] ONNX export path decided and minimal export validated (or plan documented if deferred) — Priority: Média; Owner: worldmodel (TBD); Note: add equivalence test in `tools/tests`.
+  - [/] ONNX export path decidido e exportação mínima validada — Priority: Média; Owner: worldmodel (TBD); Instrução: Para exportar, rode `python examples/train_worldmodel.py --export_onnx artifacts/wm_checkpoint.onnx`. Para validar equivalência, compare outputs do modelo original e ONNX em um teste simples (exemplo em `tools/tests/test_onnx_equivalence.py`).
   - [ ] Training infra defined (compute, GPU quotas, cost limits) and access verified — Priority: Alta; Owner: infra/ops (TBD)
   - [ ] Runbook and evaluation template ready (how to interpret `artifacts/metrics.json`, `onnx-check.npz`, and promotion criteria) — Priority: Média; Owner: worldmodel (TBD)
 
