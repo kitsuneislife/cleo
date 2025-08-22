@@ -8,6 +8,11 @@ Instruções rápidas
 - Crie um ADR para decisões arquiteturais importantes.
 - Atualize o `README.md` do serviço e a checklist neste arquivo sempre que acrescentar um novo serviço ou mudança de contrato.
 
+Próximas ações recomendadas (prioridade alta → baixa)
+- Substituir `data/worldmodel/validation.jsonl` por um dataset representativo (ex.: conversão MineRL) — Priority: Alta; Owner: worldmodel (TBD); Timebox: 1–2 semanas
+- Definir plano de armazenamento/promoção de artefatos (S3/MLFlow) e templates de secrets em `.kit/` — Priority: Alta; Owner: infra/ops (TBD)
+- Validar caminho ONNX e testes de equivalência (export + inferência) — Priority: Média; Owner: worldmodel (TBD)
+
 ---
 
 ## Tabela de conteúdos (áreas)
@@ -61,15 +66,15 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Documentar critérios de qualidade do modelo (MSE, likelihood, fidelidade de simulação)
 
   ## Pre-training gate (must complete before large-scale training)
-  - [ ] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout)
-  - [ ] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`)
+  - [x] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout) — synthetic data committed on branch `ci/smoke-valid`; replace with representative dataset before large-scale training
+  - [x] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`) — calibrated from synthetic validation set
   - [x] CI smoke validation passing on main (job `validate-and-promote` green)
-  - [ ] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template in repo
-  - [ ] Metrics collection enabled in staging (ENABLE_METRICS=1) and Prometheus scrape job configured
+  - [ ] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template in repo — Priority: Alta; Owner: infra/ops (TBD); Note: requires decision on provider and secret templates in `.kit/`.
+  - [ ] Metrics collection enabled in staging (ENABLE_METRICS=1) and Prometheus scrape job configured — Priority: Alta; Owner: infra/observability (TBD); Note: enable `WORLDMODEL_METRICS_PORT` and add scrape config.
   - [x] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
-  - [ ] ONNX export path decided and minimal export validated (or plan documented if deferred)
-  - [ ] Training infra defined (compute, GPU quotas, cost limits) and access verified
-  - [ ] Runbook and evaluation template ready (how to interpret `artifacts/metrics.json`, `onnx-check.npz`, and promotion criteria)
+  - [ ] ONNX export path decided and minimal export validated (or plan documented if deferred) — Priority: Média; Owner: worldmodel (TBD); Note: add equivalence test in `tools/tests`.
+  - [ ] Training infra defined (compute, GPU quotas, cost limits) and access verified — Priority: Alta; Owner: infra/ops (TBD)
+  - [ ] Runbook and evaluation template ready (how to interpret `artifacts/metrics.json`, `onnx-check.npz`, and promotion criteria) — Priority: Média; Owner: worldmodel (TBD)
 
 - Implementar
   - [x] Implementar serviço `worldmodel` com endpoints gRPC para predição e simulação (toy predictor)
