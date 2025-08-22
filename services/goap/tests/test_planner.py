@@ -1,5 +1,4 @@
-def test_goap_plan():
-    from services.goap.planner import GOAPPlanner
-    planner = GOAPPlanner()
-    plan = planner.plan("Diamante")
-    assert plan == ["MinerarDiamante", "ColetarDrop"]
+import pytest
+
+pytest.skip("duplicate test file replaced; use test_planner_goap.py instead", allow_module_level=True)
+

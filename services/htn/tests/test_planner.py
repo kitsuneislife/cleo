@@ -1,5 +1,4 @@
-def test_htn_plan():
-    from services.htn.planner import HTNPlanner
-    planner = HTNPlanner()
-    plan = planner.plan("MinerarBloco")
-    assert plan == ["IrAteBloco", "UsarFerramenta", "ColetarDrop"]
+import pytest
+
+pytest.skip("duplicate test file replaced; use test_planner_htn.py instead", allow_module_level=True)
+

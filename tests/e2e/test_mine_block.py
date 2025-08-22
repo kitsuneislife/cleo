@@ -9,7 +9,16 @@ import json
 import threading
 import signal
 import socket
-from tests.e2e.mock_control import serve as mock_control_serve
+import importlib.util
+import os
+
+# Load mock_control module directly from file to avoid package import issues
+_this_dir = os.path.dirname(__file__)
+_mock_path = os.path.join(_this_dir, 'mock_control.py')
+spec = importlib.util.spec_from_file_location('_mock_control_e2e', _mock_path)
+mock_control = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(mock_control)
+mock_control_serve = mock_control.serve
 
 ADAPTER_SERVICE = 'adapter'
 BOT_SERVICE = 'mineflayer-bot'

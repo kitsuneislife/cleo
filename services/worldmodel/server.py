@@ -32,7 +32,21 @@ def serve(port=50063):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
     if worldmodel_pb2_grpc:
         worldmodel_pb2_grpc.add_WorldModelServicer_to_server(WorldModelServicer(), server)
-    server.add_insecure_port(f"[::]:{port}")
+    # Try multiple bind addresses; if none work, log and return instead of raising
+    bound = False
+    for addr in (f"[::]:{port}", f"127.0.0.1:{port}", f"0.0.0.0:{port}"):
+        try:
+            server.add_insecure_port(addr)
+            bound = True
+            logging.info(f"Bound WorldModel server to {addr}")
+            break
+        except Exception:
+            logging.debug(f"Failed to bind WorldModel server to {addr}")
+
+    if not bound:
+        logging.warning(f"WorldModel server could not bind to any address for port {port}; not starting server")
+        return
+
     server.start()
     logging.info(f"WorldModel server listening on {port}")
     server.wait_for_termination()

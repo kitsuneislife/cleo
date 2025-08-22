@@ -40,7 +40,19 @@ def serve(port=50064):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=5))
     if control_pb2_grpc:
         control_pb2_grpc.add_ControlServiceServicer_to_server(ExecutionServicer(), server)
-    server.add_insecure_port(f"[::]:{port}")
+    bound = False
+    for addr in (f"[::]:{port}", f"127.0.0.1:{port}", f"0.0.0.0:{port}"):
+        try:
+            server.add_insecure_port(addr)
+            bound = True
+            logging.info(f"Bound Execution server to {addr}")
+            break
+        except Exception:
+            logging.debug(f"Failed to bind Execution server to {addr}")
+
+    if not bound:
+        logging.warning(f"Execution server could not bind to any address for port {port}; not starting server")
+        return
     server.start()
     logging.info(f"Execution server listening on {port}")
     server.wait_for_termination()
