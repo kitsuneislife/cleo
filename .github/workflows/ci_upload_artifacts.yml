@@ -1,0 +1,48 @@
+name: CI Upload Artifacts (example)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, staging ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  upload-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Build artifact
+        run: |
+          echo "dummy artifact" > artifact.txt
+
+      - name: Upload to S3
+        run: |
+          aws s3 cp artifact.txt s3://$ARTIFACTS_S3_BUCKET/test/artifact-$(date +%s).txt
+        env:
+          ARTIFACTS_S3_BUCKET: ${{ secrets.ARTIFACTS_S3_BUCKET }}
+
+      - name: Log artifact in MLflow (example)
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          MLFLOW_API_TOKEN: ${{ secrets.MLFLOW_API_TOKEN }}
+        run: |
+          python - <<'PY'
+import os
+print('Would log artifact to MLflow at', os.environ.get('MLFLOW_TRACKING_URI'))
+# Example: use mlflow client to create run and log artifact
+PY
+
+# Notes:
+# - Configure repo secrets: ARTIFACTS_S3_BUCKET, AWS_OIDC_ROLE_ARN, MLFLOW_TRACKING_URI, MLFLOW_API_TOKEN
+# - Prefer using OIDC (id-token) instead of storing AWS keys in secrets
