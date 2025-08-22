@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      artifact-path: artifacts/wm_checkpoint.npz
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,3 +58,55 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: python examples/train_worldmodel.py --batch_size 8 --epochs 1
+
+      - name: Upload checkpoint artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wm_checkpoint
+          path: artifacts/wm_checkpoint.npz
+
+  validate-and-promote:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download checkpoint artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wm_checkpoint
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dev requirements
+        run: pip install -r requirements-dev.txt
+
+      - name: Run worldmodel validator
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python -m tools.validate_worldmodel --checkpoint artifacts/wm_checkpoint.npz --data data/worldmodel/mixed.jsonl --thresholds services/worldmodel/THRESHOLDS.json
+
+      - name: Create GitHub release (promote model)
+        if: success()
+        uses: actions/create-release@v1
+        with:
+          tag_name: wm-checkpoint-${{ github.run_id }}
+          release_name: "Worldmodel checkpoint ${{ github.run_id }}"
+          body: "Automated promotion: worldmodel checkpoint passing validation"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload checkpoint to release
+        if: success()
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/wm_checkpoint.npz
+          asset_name: wm_checkpoint.npz
+          asset_content_type: application/octet-stream

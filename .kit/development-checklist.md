@@ -58,7 +58,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
 - Planejar
   - [x] Definir formato latente `z` e esquema de inputs/outputs (proto ou JSON compactado)
   - [x] Planejar pipeline de treino (offline + sonhos) e datasets necessários
-  - [ ] Documentar critérios de qualidade do modelo (MSE, likelihood, fidelidade de simulação)
+  - [x] Documentar critérios de qualidade do modelo (MSE, likelihood, fidelidade de simulação)
 - Implementar
   - [x] Implementar serviço `worldmodel` com endpoints gRPC para predição e simulação (toy predictor)
   - [x] Implementar utilitário para gerar 'sonhos' (trajectórias simuladas)
