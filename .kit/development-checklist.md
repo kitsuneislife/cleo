@@ -70,7 +70,13 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`) — calibrated from synthetic validation set
   - [x] CI smoke validation passing on main (job `validate-and-promote` green)
   - [/] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template em `.kit/secrets-template.md` — Priority: Alta; Owner: infra/ops (TBD); Note: template criado, falta decisão final e preenchimento conforme provedor.
-  - [ ] Metrics collection enabled in staging (ENABLE_METRICS=1) and Prometheus scrape job configured — Priority: Alta; Owner: infra/observability (TBD); Note: enable `WORLDMODEL_METRICS_PORT` and add scrape config.
+  - [/] Metrics collection enabled in staging (ENABLE_METRICS=1) e Prometheus scrape job configurável — Priority: Alta; Owner: infra/observability (TBD); Instrução: Para habilitar, defina `ENABLE_METRICS=1` e `WORLDMODEL_METRICS_PORT=8000` no ambiente do serviço. Adicione scrape job no Prometheus:
+    ```yaml
+    - job_name: 'cleo-worldmodel'
+      static_configs:
+        - targets: ['localhost:8000']
+    ```
+    Valide acessando `http://localhost:8000/metrics` após iniciar o serviço.
   - [x] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
   - [ ] ONNX export path decided and minimal export validated (or plan documented if deferred) — Priority: Média; Owner: worldmodel (TBD); Note: add equivalence test in `tools/tests`.
   - [ ] Training infra defined (compute, GPU quotas, cost limits) and access verified — Priority: Alta; Owner: infra/ops (TBD)
