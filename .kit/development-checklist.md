@@ -43,7 +43,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Tests unitários para o loop de decisão (simulações determinísticas)
 - Testar
   - [x] Testes de integração: `control` ↔ `worldmodel` ↔ `execution` no `docker-compose` (smoke via local stubs)
-  - [ ] E2E smoke: executar cenário de alto-nível (ex.: alcançar e minerar um bloco)
+  - [x] E2E smoke: executar cenário de alto-nível (ex.: alcançar e minerar um bloco)
 - Robustecer
   - [x] Instrumentar métricas (latência, taxa de decisões por segundo) (opt-in via ENABLE_METRICS)
   - [x] Adicionar circuit-breaker e retries para chamadas externas (basic retry logic present in worldmodel call handling)
