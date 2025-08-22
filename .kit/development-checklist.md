@@ -137,7 +137,12 @@ Para cada componente aplicar as 5 etapas do protocolo:
 - Implementar
   - [ ] Dockerfile template por serviço
   - [ ] Helm chart / kustomize skeleton (opcional inicial)
-  - [ ] CI: geração de stubs, lint, test, build image, scan
+  - CI: pipeline (status parcial)
+    - [x] geração de stubs (protoc) no CI (`scripts/gen_protos.sh` + step)
+    - [x] lint (ruff) no CI
+    - [x] test (pytest) no CI
+    - [ ] build image (docker build/publish) no CI
+    - [x] scan (pip-audit) no CI (step presente; currently permissive)
 - Testar
   - [ ] Testes E2E em compose; smoke em cluster (se disponível)
   - [ ] Testes de resiliência (kill/restart serviços)
@@ -166,14 +171,18 @@ Para cada componente aplicar as 5 etapas do protocolo:
 ---
 
 ## Tarefas transversais e lista mínima inicial
-- [ ] Adicionar `Dependabot` / atualização automática de dependências
-- [ ] Adicionar `pip-audit` ou scanner equivalente no CI
-- [ ] Automatizar geração de stubs no CI (`protoc` step)
-- [ ] Adicionar linter (ruff/flake8) e formatter (black/isort) no CI
-- [ ] Criar Dockerfiles por serviço e um `Makefile` com targets: `dev`, `test`, `build`
-- [ ] Criar templates de secrets e instruções para secret manager (ex.: HashiCorp Vault / AWS Secrets)
-- [ ] Implementar política de logs (Structured JSON) e evitar PII
-- [ ] Definir e documentar processo para ADRs
+ - [ ] Adicionar `Dependabot` / atualização automática de dependências
+ - [x] Adicionar `pip-audit` ou scanner equivalente no CI (step incluído)
+ - [x] Automatizar geração de stubs no CI (`protoc` step)
+ - Adicionar linter/formatter no CI
+   - [x] ruff (lint) — já incluído no CI
+   - [ ] black / isort (formatter) — não incluído ainda
+ - Criar Dockerfiles por serviço e Makefile
+   - [ ] Dockerfiles por serviço
+   - [x] Makefile com targets: `dev`, `test`, `build`
+ - [ ] Criar templates de secrets e instruções para secret manager (ex.: HashiCorp Vault / AWS Secrets)
+ - [ ] Implementar política de logs (Structured JSON) e evitar PII
+ - [ ] Definir e documentar processo para ADRs
 
 ---
 

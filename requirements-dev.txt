@@ -1,0 +1,6 @@
+# Development-only dependencies
+pip-audit
+ruff
+pytest
+grpcio-tools
+protobuf
