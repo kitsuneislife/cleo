@@ -69,7 +69,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout) — representativo gerado via `scripts/convert_minerl_to_validation.py` (mock testado, substitua por dados reais para produção)
   - [x] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`) — calibrated from synthetic validation set
   - [x] CI smoke validation passing on main (job `validate-and-promote` green)
-  - [ ] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template in repo — Priority: Alta; Owner: infra/ops (TBD); Note: requires decision on provider and secret templates in `.kit/`.
+  - [/] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template em `.kit/secrets-template.md` — Priority: Alta; Owner: infra/ops (TBD); Note: template criado, falta decisão final e preenchimento conforme provedor.
   - [ ] Metrics collection enabled in staging (ENABLE_METRICS=1) and Prometheus scrape job configured — Priority: Alta; Owner: infra/observability (TBD); Note: enable `WORLDMODEL_METRICS_PORT` and add scrape config.
   - [x] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
   - [ ] ONNX export path decided and minimal export validated (or plan documented if deferred) — Priority: Média; Owner: worldmodel (TBD); Note: add equivalence test in `tools/tests`.
