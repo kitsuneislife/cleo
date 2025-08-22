@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  perception:
+    image: scratch
+    container_name: cleo_perception
+    # substitua por uma imagem real durante desenvolvimento
+    command: ["/bin/sh", "-c", "sleep infinity"]
+    ports:
+      - "50051:50051"
+  worldmodel:
+    image: scratch
+    container_name: cleo_worldmodel
+    command: ["/bin/sh", "-c", "sleep infinity"]
+  control:
+    image: scratch
+    container_name: cleo_control
+    command: ["/bin/sh", "-c", "sleep infinity"]
+
+# Rede de exemplo para desenvolvimento
+networks:
+  default:
+    name: cleo_dev_net
