@@ -64,14 +64,51 @@ def observe(req: ObserveReq):
     except Exception:
         # accept raw utf-8 string as fallback
         state_bytes = req.state.encode('utf-8')
+    # Log the decoded state for observability in E2E tests (may contain markers like 'mined_block')
+    try:
+        try:
+            state_str = state_bytes.decode('utf-8')
+        except Exception:
+            state_str = str(state_bytes)
+        logger.info('observe payload: %s', state_str)
+    except Exception:
+        logger.exception('failed to log observe payload')
     stub = _get_control_stub()
     grpc_req = control_pb2.DecisionRequest(agent_id=req.agent_id, state=state_bytes)
-    try:
-        resp = stub.RequestDecision(grpc_req, timeout=3)
-    except Exception as e:
-        logger.exception('control call failed')
-        # return 502 but include the string error for diagnostics in logs and response
-        raise HTTPException(status_code=502, detail=f'control error: {e}')
+    # Retry with exponential backoff for transient control connectivity issues
+    # configurable via env to allow test/local tuning
+    max_attempts = int(os.environ.get('ADAPTER_CONTROL_RETRIES', '5'))
+    base_delay = float(os.environ.get('ADAPTER_CONTROL_BACKOFF_BASE', '0.5'))
+    per_attempt_timeout = float(os.environ.get('ADAPTER_CONTROL_TIMEOUT', '4'))
+    import random
+    resp = None
+    last_exc = None
+    for attempt in range(1, max_attempts + 1):
+        try:
+            # per-attempt timeout configurable
+            resp = stub.RequestDecision(grpc_req, timeout=per_attempt_timeout)
+            last_exc = None
+            break
+        except Exception as e:
+            last_exc = e
+            logger.warning('control call attempt %d/%d failed: %s', attempt, max_attempts, e)
+            # brief backoff with jitter before retrying
+            if attempt < max_attempts:
+                try:
+                    # exponential backoff with full jitter
+                    exp = base_delay * (2 ** (attempt - 1))
+                    jitter = random.uniform(0, exp)
+                    delay = exp + jitter
+                    logger.info('retrying control call after %.2fs (exp=%.2f jitter=%.2f)', delay, exp, jitter)
+                    import time
+
+                    time.sleep(delay)
+                except Exception:
+                    # ignore sleep errors and continue
+                    pass
+    if last_exc is not None and resp is None:
+        logger.exception('control call failed after %d attempts', max_attempts)
+        raise HTTPException(status_code=502, detail=f'control error: {last_exc}')
     # Return first operator if any
     if len(resp.operators) > 0:
         op = resp.operators[0]

@@ -3,6 +3,13 @@ import time
 import re
 import os
 import sys
+import urllib.request
+import urllib.error
+import json
+import threading
+import signal
+import socket
+from tests.e2e.mock_control import serve as mock_control_serve
 
 ADAPTER_SERVICE = 'adapter'
 BOT_SERVICE = 'mineflayer-bot'
@@ -13,23 +20,46 @@ def run(cmd, **kwargs):
     return subprocess.run(cmd, shell=True, check=False, capture_output=True, text=True, **kwargs)
 
 
-def wait_for_adapter(timeout=120):
+def wait_for_adapter(timeout=60):
     deadline = time.time() + timeout
     url = 'http://localhost:8001/health'
     while time.time() < deadline:
         try:
-            import requests
-            r = requests.get(url, timeout=5)
-            if r.status_code == 200:
-                print('adapter /health OK:', r.json())
-                return True
-        except Exception as e:
+            with urllib.request.urlopen(url, timeout=5) as resp:
+                body = resp.read().decode('utf-8')
+                if resp.getcode() == 200:
+                    try:
+                        j = json.loads(body)
+                    except Exception:
+                        j = body
+                    print('adapter /health OK:', j)
+                    return True
+        except urllib.error.HTTPError as e:
+            print('adapter returned HTTP error, not ready yet:', e)
+        except urllib.error.URLError as e:
             print('adapter not ready yet:', e)
-        time.sleep(2)
+        except Exception as e:
+            print('adapter not ready yet (unexpected):', e)
+    time.sleep(1)
     return False
 
 
 def test_e2e_mine_block():
+    # Start a local mock control server on a free port and point the adapter to it
+    # find a free port
+    s = socket.socket()
+    s.bind(('127.0.0.1', 0))
+    mock_port = s.getsockname()[1]
+    s.close()
+
+    stop_event = threading.Event()
+    mock_thread = threading.Thread(target=mock_control_serve, kwargs={'port': mock_port, 'stop_event': stop_event}, daemon=True)
+    mock_thread.start()
+
+    # export env so adapter in compose will talk to the mock control on host.docker.internal
+    os.environ['CONTROL_HOST'] = 'host.docker.internal'
+    os.environ['CONTROL_PORT'] = str(mock_port)
+
     # Ensure compose stack is up
     r = run('docker compose up -d --build')
     assert r.returncode == 0, f"compose up failed: {r.stderr}"
@@ -60,6 +90,10 @@ def test_e2e_mine_block():
     except subprocess.TimeoutExpired:
         p.kill()
         ret = -1
+
+    # cleanup mock control
+    stop_event.set()
+    mock_thread.join(timeout=2)
 
     assert found, 'mined_block event not found in adapter logs'
     assert ret == 0, f'bot process exited with {ret}'

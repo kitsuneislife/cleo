@@ -151,7 +151,8 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [ ] Monitoramento (Prometheus + Grafana), tracing (OpenTelemetry)
   - [ ] Política de backups para DB vetorial e modelos críticos
 - Documentar
-  - [ ] How-to deploy, run and rollback; healthchecks; onboarding guide
+  - [x] How-to deploy, run and rollback; healthchecks; onboarding guide
+  - [x] README for `services/integration` added (basic adapter docs)
 
 ---
 

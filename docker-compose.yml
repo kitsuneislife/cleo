@@ -51,8 +51,8 @@ services:
     container_name: cleo_adapter
     environment:
       - ADAPTER_PORT=8001
-      - CONTROL_HOST=control
-      - CONTROL_PORT=50061
+      - CONTROL_HOST=${CONTROL_HOST:-control}
+      - CONTROL_PORT=${CONTROL_PORT:-50061}
     ports:
       - "8001:8001"
     healthcheck:
