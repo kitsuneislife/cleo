@@ -65,11 +65,12 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Tests unitários para modelos (shape/contratos) e integração com dados sintéticos
 - Testar
   - [x] Validar que o controlador obtém previsões coerentes em cenários simples
-  - [ ] Medir discrepância previsão vs realidade e registar como métrica
+  - [x] Medir discrepância previsão vs realidade e registar como métrica
 - Robustecer
   - [ ] Exportar modelo para ONNX e validar inferência equivalência
   - [ ] Adicionar cache e batch inference para throughput
   - [ ] Monitorar drift do modelo e pipeline de retraining automatizado
+  - [x] Registar discrepância previsão vs realidade (artifacts/metrics.json) e integrar validação no CI (tools/validate_worldmodel.py + job validate-and-promote)
 - Documentar
   - [ ] README com como treinar, exportar e usar o modelo (ex.: `examples/train_worldmodel.py`)
   - [x] Exemplo `examples/train_worldmodel.py` adicionado (toy training loop)
