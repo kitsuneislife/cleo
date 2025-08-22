@@ -34,7 +34,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
 
 ## 1 Núcleo Cognitivo
 - Planejar
-  - [ ] Definir escopo do núcleo (módulos: perceção, procedural, declarativa, buffers)
+  - [x] Definir escopo do núcleo (módulos: perceção, procedural, declarativa, buffers) — ver ` .kit/nucleo-scope.md` for full definition
   - [x] Especificar APIs entre `control` e planeadores (gRPC `.proto`)
   - [x] Criar Definition of Ready com critérios de aceitação e benchmarks iniciais
 - Implementar
