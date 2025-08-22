@@ -13,6 +13,11 @@ services:
       - "50061:50061"
     volumes:
       - control_data:/data
+    healthcheck:
+      test: ["CMD-SHELL","/bin/sh -c 'nc -z localhost 50061 || exit 1'"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   worldmodel:
     build:
@@ -23,6 +28,11 @@ services:
       - WORLD_MODEL_PORT=50063
     ports:
       - "50063:50063"
+    healthcheck:
+      test: ["CMD-SHELL","/bin/sh -c 'nc -z localhost 50063 || exit 1'"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   execution:
     build:
@@ -45,6 +55,11 @@ services:
       - CONTROL_PORT=50061
     ports:
       - "8001:8001"
+    healthcheck:
+      test: ["CMD-SHELL","/bin/sh -c 'curl -sf http://localhost:8001/ || exit 1'"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   bot-sim:
     build:
@@ -84,7 +99,11 @@ services:
       minecraft:
         condition: service_healthy
       adapter:
-        condition: service_started
+        condition: service_healthy
+      control:
+        condition: service_healthy
+      worldmodel:
+        condition: service_healthy
 
 volumes:
   control_data:
