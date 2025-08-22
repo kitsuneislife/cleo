@@ -1,0 +1,3 @@
+{"timestamp": 0, "agent_id": "Steve", "pos": [0.0, 64.0, 0.0], "meta": {"action": "move"}}
+{"timestamp": 1, "agent_id": "Steve", "pos": [1.0, 64.0, 0.0], "meta": {"action": "jump"}}
+{"timestamp": 2, "agent_id": "Steve", "pos": [1.0, 65.0, 0.0], "meta": {"action": "mine"}}

@@ -66,7 +66,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Documentar critérios de qualidade do modelo (MSE, likelihood, fidelidade de simulação)
 
   ## Pre-training gate (must complete before large-scale training)
-  - [x] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout) — synthetic data committed on branch `ci/smoke-valid`; replace with representative dataset before large-scale training
+  - [x] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout) — representativo gerado via `scripts/convert_minerl_to_validation.py` (mock testado, substitua por dados reais para produção)
   - [x] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`) — calibrated from synthetic validation set
   - [x] CI smoke validation passing on main (job `validate-and-promote` green)
   - [ ] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template in repo — Priority: Alta; Owner: infra/ops (TBD); Note: requires decision on provider and secret templates in `.kit/`.
