@@ -59,6 +59,18 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Definir formato latente `z` e esquema de inputs/outputs (proto ou JSON compactado)
   - [x] Planejar pipeline de treino (offline + sonhos) e datasets necessários
   - [x] Documentar critérios de qualidade do modelo (MSE, likelihood, fidelidade de simulação)
+
+  ## Pre-training gate (must complete before large-scale training)
+  - [ ] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout)
+  - [ ] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`)
+  - [ ] CI smoke validation passing on main (job `validate-and-promote` green)
+  - [ ] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template in repo
+  - [ ] Metrics collection enabled in staging (ENABLE_METRICS=1) and Prometheus scrape job configured
+  - [ ] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
+  - [ ] ONNX export path decided and minimal export validated (or plan documented if deferred)
+  - [ ] Training infra defined (compute, GPU quotas, cost limits) and access verified
+  - [ ] Runbook and evaluation template ready (how to interpret `artifacts/metrics.json`, `onnx-check.npz`, and promotion criteria)
+
 - Implementar
   - [x] Implementar serviço `worldmodel` com endpoints gRPC para predição e simulação (toy predictor)
   - [x] Implementar utilitário para gerar 'sonhos' (trajectórias simuladas)
