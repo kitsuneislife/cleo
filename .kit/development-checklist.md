@@ -145,7 +145,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
     - [ ] build image (docker build/publish) no CI
     - [x] scan (pip-audit) no CI (step presente; currently permissive)
 - Testar
-  - [ ] Testes E2E em compose; smoke em cluster (se disponível)
+  - [x] Testes E2E em compose; smoke em cluster (se disponível) — verificado com `examples/minecraft` (bot spawnou e fluxo adapter→control→worldmodel observado)
   - [ ] Testes de resiliência (kill/restart serviços)
 - Robustecer
   - [ ] Monitoramento (Prometheus + Grafana), tracing (OpenTelemetry)
