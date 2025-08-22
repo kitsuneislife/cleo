@@ -104,7 +104,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
 
 ## 3 Planeamento Hierárquico (HTN + GOAP)
 - Planejar
-  - [ ] Definir linguagem de domínio para HTN e representação de objetivos para GOAP
+  - [/] Linguagem de domínio para HTN e representação de objetivos para GOAP definida em `services/htn/domain_language.md` (exemplos YAML para tarefas, operadores e objetivos)
   - [ ] Definir contratos entre HTN → GOAP → Control (proto)
 - Implementar
   - [ ] Implementar HTN planner skeleton (gerar tasks de alto nível)
