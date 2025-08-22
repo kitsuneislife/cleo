@@ -4,3 +4,5 @@ ruff
 pytest
 grpcio-tools
 protobuf
+numpy
+onnx

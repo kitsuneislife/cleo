@@ -51,3 +51,8 @@ jobs:
 
       - name: Run tests
         run: pytest -q
+
+      - name: Run worldmodel smoke trainer
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python examples/train_worldmodel.py --batch_size 8 --epochs 1
