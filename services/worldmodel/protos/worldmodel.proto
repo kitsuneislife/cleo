@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package worldmodel;
+
+// Minimal contract describing the latent representation `z` and I/O
+// messages used between services. This is intentionally small and
+// meant to be the canonical source-of-truth for gRPC/clients.
+
+message LatentZ {
+  // Compact representation: packed float32 bytes. Use client/server
+  // helpers to pack/unpack float32 arrays.
+  bytes z = 1;
+}
+
+message InputState {
+  string agent_id = 1;
+  int64 timestamp = 2;
+  // Observations/features are represented as a dense float vector.
+  repeated float features = 3;
+}
+
+message Prediction {
+  LatentZ z = 1;
+  // Optional confidence/score
+  float score = 2;
+}
+
+service WorldModel {
+  // Predict latent z for single observation
+  rpc Predict (InputState) returns (Prediction) {}
+}

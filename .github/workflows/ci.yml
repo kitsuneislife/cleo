@@ -33,10 +33,15 @@ jobs:
         run: pip install -r requirements-dev.txt
 
       - name: Generate Python gRPC stubs (cross-platform)
-        run: C:/windows/system32/cmd.exe /c "python scripts/gen_protos.py"
+        run: python scripts/gen_protos.py
 
       - name: Verify generated proto imports
-        run: C:/windows/system32/cmd.exe /c "python tools/check_protos_import.py"
+        run: python tools/check_protos_import.py
+
+      - name: Run JSON<->Proto conversion example
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python examples/json_proto_conversion.py
 
       - name: Run pip-audit
         run: pip-audit --progress=off || true

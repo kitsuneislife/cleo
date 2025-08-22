@@ -56,12 +56,12 @@ Para cada componente aplicar as 5 etapas do protocolo:
 
 ## 2 Modelo do Mundo (V–M–C)
 - Planejar
-  - [ ] Definir formato latente `z` e esquema de inputs/outputs (proto ou JSON compactado)
+  - [x] Definir formato latente `z` e esquema de inputs/outputs (proto ou JSON compactado)
   - [ ] Planejar pipeline de treino (offline + sonhos) e datasets necessários
   - [ ] Documentar critérios de qualidade do modelo (MSE, likelihood, fidelidade de simulação)
 - Implementar
   - [x] Implementar serviço `worldmodel` com endpoints gRPC para predição e simulação (toy predictor)
-  - [ ] Implementar utilitário para gerar 'sonhos' (trajectórias simuladas)
+  - [x] Implementar utilitário para gerar 'sonhos' (trajectórias simuladas)
   - [x] Tests unitários para modelos (shape/contratos) e integração com dados sintéticos
 - Testar
   - [x] Validar que o controlador obtém previsões coerentes em cenários simples
@@ -72,6 +72,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [ ] Monitorar drift do modelo e pipeline de retraining automatizado
 - Documentar
   - [ ] README com como treinar, exportar e usar o modelo (ex.: `examples/train_worldmodel.py`)
+  - [x] Exemplo `examples/train_worldmodel.py` adicionado (toy training loop)
 
 ---
 

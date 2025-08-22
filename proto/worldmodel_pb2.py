@@ -24,17 +24,23 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10worldmodel.proto\x12\x0f\x63leo.worldmodel\"1\n\x0ePredictRequest\x12\x10\n\x08\x61gent_id\x18\x01 \x01(\t\x12\r\n\x05state\x18\x02 \x01(\x0c\"%\n\x0fPredictResponse\x12\x12\n\nprediction\x18\x01 \x01(\x0c\x32\\\n\nWorldModel\x12N\n\x07Predict\x12\x1f.cleo.worldmodel.PredictRequest\x1a .cleo.worldmodel.PredictResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10worldmodel.proto\x12\nworldmodel\"\x14\n\x07LatentZ\x12\t\n\x01z\x18\x01 \x01(\x0c\"C\n\nInputState\x12\x10\n\x08\x61gent_id\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x10\n\x08\x66\x65\x61tures\x18\x03 \x03(\x02\";\n\nPrediction\x12\x1e\n\x01z\x18\x01 \x01(\x0b\x32\x13.worldmodel.LatentZ\x12\r\n\x05score\x18\x02 \x01(\x02\"1\n\x0ePredictRequest\x12\x10\n\x08\x61gent_id\x18\x01 \x01(\t\x12\r\n\x05state\x18\x02 \x01(\x0c\"%\n\x0fPredictResponse\x12\x12\n\nprediction\x18\x01 \x01(\x0c\x32R\n\nWorldModel\x12\x44\n\x07Predict\x12\x1a.worldmodel.PredictRequest\x1a\x1b.worldmodel.PredictResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'worldmodel_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_PREDICTREQUEST']._serialized_start=37
-  _globals['_PREDICTREQUEST']._serialized_end=86
-  _globals['_PREDICTRESPONSE']._serialized_start=88
-  _globals['_PREDICTRESPONSE']._serialized_end=125
-  _globals['_WORLDMODEL']._serialized_start=127
-  _globals['_WORLDMODEL']._serialized_end=219
+  _globals['_LATENTZ']._serialized_start=32
+  _globals['_LATENTZ']._serialized_end=52
+  _globals['_INPUTSTATE']._serialized_start=54
+  _globals['_INPUTSTATE']._serialized_end=121
+  _globals['_PREDICTION']._serialized_start=123
+  _globals['_PREDICTION']._serialized_end=182
+  _globals['_PREDICTREQUEST']._serialized_start=184
+  _globals['_PREDICTREQUEST']._serialized_end=233
+  _globals['_PREDICTRESPONSE']._serialized_start=235
+  _globals['_PREDICTRESPONSE']._serialized_end=272
+  _globals['_WORLDMODEL']._serialized_start=274
+  _globals['_WORLDMODEL']._serialized_end=356
 # @@protoc_insertion_point(module_scope)

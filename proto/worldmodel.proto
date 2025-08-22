@@ -1,12 +1,24 @@
 syntax = "proto3";
 
-package cleo.worldmodel;
+package worldmodel;
 
-service WorldModel {
-  // Predict returns a simple predicted latent or summary
-  rpc Predict(PredictRequest) returns (PredictResponse) {}
+// Canonical compact proto for worldmodel predictions using packed float32 bytes
+message LatentZ {
+  bytes z = 1;
 }
 
+message InputState {
+  string agent_id = 1;
+  int64 timestamp = 2;
+  repeated float features = 3;
+}
+
+message Prediction {
+  LatentZ z = 1;
+  float score = 2;
+}
+
+// Backwards-compatible thin wrapper used by earlier tests and the stub server
 message PredictRequest {
   string agent_id = 1;
   bytes state = 2;
@@ -14,4 +26,9 @@ message PredictRequest {
 
 message PredictResponse {
   bytes prediction = 1;
+}
+
+service WorldModel {
+  // Legacy Predict RPC used by tests: takes a bytes `state` and returns raw bytes
+  rpc Predict(PredictRequest) returns (PredictResponse) {}
 }

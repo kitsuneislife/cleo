@@ -35,7 +35,7 @@ class WorldModelStub(object):
             channel: A grpc.Channel.
         """
         self.Predict = channel.unary_unary(
-                '/cleo.worldmodel.WorldModel/Predict',
+                '/worldmodel.WorldModel/Predict',
                 request_serializer=worldmodel__pb2.PredictRequest.SerializeToString,
                 response_deserializer=worldmodel__pb2.PredictResponse.FromString,
                 _registered_method=True)
@@ -45,7 +45,7 @@ class WorldModelServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Predict(self, request, context):
-        """Predict returns a simple predicted latent or summary
+        """Legacy Predict RPC used by tests: takes a bytes `state` and returns raw bytes
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -61,9 +61,9 @@ def add_WorldModelServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cleo.worldmodel.WorldModel', rpc_method_handlers)
+            'worldmodel.WorldModel', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('cleo.worldmodel.WorldModel', rpc_method_handlers)
+    server.add_registered_method_handlers('worldmodel.WorldModel', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -84,7 +84,7 @@ class WorldModel(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/cleo.worldmodel.WorldModel/Predict',
+            '/worldmodel.WorldModel/Predict',
             worldmodel__pb2.PredictRequest.SerializeToString,
             worldmodel__pb2.PredictResponse.FromString,
             options,
