@@ -1,3 +1,43 @@
+# Worldmodel service — quick usage
+
+This folder contains the toy worldmodel used for development and CI smoke tests.
+
+Key artifacts
+- `examples/train_worldmodel.py` — lightweight numpy trainer that saves `artifacts/wm_checkpoint.npz`.
+- `tools/validate_worldmodel.py` — computes MSE_h1, RMSE_h10 and DTW and writes `artifacts/metrics.json` (used by CI).
+- `tools/calibrate_thresholds.py` — compute thresholds from a validation dataset (percentile) and update `services/worldmodel/THRESHOLDS.json`.
+- `services/worldmodel/metrics.py` — optional Prometheus metrics (opt-in via `ENABLE_METRICS=1`).
+
+Quick start (local dev)
+
+1) Create and activate a virtualenv and install dev requirements:
+
+```powershell
+$env:PYTHONPATH='C:\Github\cleo'
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+```
+
+2) Run the toy trainer (writes `artifacts/wm_checkpoint.npz`):
+
+```powershell
+.\.venv\Scripts\python.exe examples\train_worldmodel.py --batch_size 8 --epochs 1
+```
+
+3) Validate the checkpoint (writes `artifacts/metrics.json` and exits non-zero if thresholds exceeded):
+
+```powershell
+.\.venv\Scripts\python.exe -m tools.validate_worldmodel --checkpoint artifacts/wm_checkpoint.npz --data data/worldmodel/mixed.jsonl --thresholds services/worldmodel/THRESHOLDS.json
+```
+
+4) Calibrate thresholds from a validation dataset:
+
+```powershell
+.\.venv\Scripts\python.exe -m tools.calibrate_thresholds --data data/worldmodel/validation.jsonl --percentile 95 --checkpoint artifacts/wm_checkpoint.npz
+```
+
+Notes
+- Metrics are optional; enable with `setx ENABLE_METRICS 1` and configure `WORLDMODEL_METRICS_PORT`.
+- CI will run the trainer and validator; if validation passes it creates a GitHub Release with the checkpoint.
 # Worldmodel — Dreams generator
 
 This package contains a small utilities module used to generate synthetic "dreams" (trajectories) for the worldmodel service. The dreams generator is intentionally lightweight and deterministic-friendly so it can be used in unit tests, examples and toy training loops.

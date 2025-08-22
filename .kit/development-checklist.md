@@ -72,8 +72,10 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [ ] Monitorar drift do modelo e pipeline de retraining automatizado
   - [x] Registar discrepância previsão vs realidade (artifacts/metrics.json) e integrar validação no CI (tools/validate_worldmodel.py + job validate-and-promote)
 - Documentar
-  - [ ] README com como treinar, exportar e usar o modelo (ex.: `examples/train_worldmodel.py`)
+  - [x] README com como treinar, exportar e usar o modelo (ex.: `examples/train_worldmodel.py`) (`services/worldmodel/README.md`)
   - [x] Exemplo `examples/train_worldmodel.py` adicionado (toy training loop)
+  - [x] Ferramentas de validação e calibração adicionadas (`tools/validate_worldmodel.py`, `tools/calibrate_thresholds.py`)
+  - [x] Métricas opt-in e persistência de discrepância (`services/worldmodel/metrics.py`, `artifacts/metrics.json`)
 
 ---
 
