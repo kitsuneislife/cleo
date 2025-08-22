@@ -2,14 +2,16 @@
 
 Quickstart:
 
-1. Start Python services (worldmodel, control, execution) and the HTTP adapter:
+1. Start the full dev stack (recommended) using Docker Compose. This will start the Minecraft server, Python services and the example bot.
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
-# start worldmodel, control, execution, adapter in separate terminals
+cd ..\..  # repo root
+docker compose up --build
 ```
 
-2. Install and run the bot (requires Node.js):
+If you prefer to run services locally, ensure `worldmodel`, `control`, `execution` and the `adapter` are running and healthy. The adapter exposes a `/health` endpoint on port 8001 that can be used by orchestrators and to verify readiness.
+
+Install and run the bot locally (requires Node.js) if you want to iterate on the bot script:
 
 ```powershell
 cd examples\minecraft
@@ -17,4 +19,4 @@ npm install
 set ADAPTER_URL=http://localhost:8001/observe; node bot.js
 ```
 
-The bot periodically sends a small state payload to the adapter and logs the decision.
+The bot periodically sends a small state payload to the adapter and logs the decision. When using Docker Compose the example bot is started automatically.

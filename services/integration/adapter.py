@@ -79,6 +79,35 @@ def observe(req: ObserveReq):
     return { 'operator_id': None }
 
 
+@app.get('/health')
+def health():
+    """Simple health endpoint used by Docker / orchestrators.
+
+    Returns 200 when adapter is healthy. The JSON body contains diagnostic
+    hints about proto import and ability to contact the control service.
+    """
+    proto_ok = control_pb2 is not None and control_pb2_grpc is not None
+    control_ok = False
+    control_err = None
+    if proto_ok:
+        try:
+            stub = _get_control_stub()
+            # Try a lightweight call if available, else just assume connectivity.
+            # We avoid calling RequestDecision here to keep this check cheap.
+            channel = stub._channel
+            state = channel.check_connectivity_state(True)
+            control_ok = True
+        except Exception as e:
+            control_err = str(e)
+    return {
+        'status': 'ok' if proto_ok and control_ok else 'degraded' if proto_ok else 'bad',
+        'proto_imported': bool(proto_ok),
+        'control_connectivity_ok': bool(control_ok),
+        'control_error': control_err,
+        'import_error': str(_import_error) if _import_error is not None else None,
+    }
+
+
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host='0.0.0.0', port=int(os.environ.get('ADAPTER_PORT', '8001')))

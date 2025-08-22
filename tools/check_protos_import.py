@@ -1,3 +1,40 @@
+"""Utility to verify generated Python protobuf stubs import correctly.
+
+Run this locally or in CI to ensure the `proto` package and stubs are importable.
+"""
+import sys
+import logging
+
+logger = logging.getLogger('cleo.tools.check_protos_import')
+logging.basicConfig(level=logging.INFO)
+
+
+def main():
+    ok = True
+    try:
+        # Preferred import path when package is installed / in PYTHONPATH
+        from proto import control_pb2, control_pb2_grpc  # type: ignore
+        logger.info('Imported proto.control_pb2 and proto.control_pb2_grpc successfully')
+    except Exception as e:
+        logger.warning('Package import failed: %s', e)
+        ok = False
+    try:
+        # Fallback: top-level generated modules
+        import control_pb2  # type: ignore
+        import control_pb2_grpc  # type: ignore
+        logger.info('Imported top-level control_pb2 modules successfully')
+    except Exception as e:
+        logger.warning('Top-level import failed: %s', e)
+        ok = ok or False
+
+    if not ok:
+        logger.error('Proto import checks failed; run `scripts/gen_protos.sh` and ensure generated files are on PYTHONPATH')
+        sys.exit(2)
+    print('OK')
+
+
+if __name__ == '__main__':
+    main()
 """Quick check that the generated proto package imports correctly.
 
 Exit 0 on success, non-zero on failure.
