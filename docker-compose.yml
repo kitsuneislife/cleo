@@ -100,10 +100,6 @@ services:
         condition: service_healthy
       adapter:
         condition: service_healthy
-      control:
-        condition: service_healthy
-      worldmodel:
-        condition: service_healthy
 
 volumes:
   control_data:
