@@ -11,14 +11,20 @@ except Exception:
     worldmodel_pb2 = None
     worldmodel_pb2_grpc = None
 
+from services.worldmodel.model import make_default_model
+
+_MODEL = make_default_model()
+
 calls = []
 
 class WorldModelServicer(worldmodel_pb2_grpc.WorldModelServicer if worldmodel_pb2_grpc else object):
     def Predict(self, request, context):
         logging.info(f"Predict called by {request.agent_id}")
         calls.append((request.agent_id, request.state))
+        # Use toy model for deterministic prediction
         if worldmodel_pb2:
-            return worldmodel_pb2.PredictResponse(prediction=b"fake_pred")
+            pred = _MODEL.predict(request.state)
+            return worldmodel_pb2.PredictResponse(prediction=pred)
         return None
 
 

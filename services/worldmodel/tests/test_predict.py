@@ -24,4 +24,6 @@ def test_worldmodel_predict_smoke():
     stub = worldmodel_pb2_grpc.WorldModelStub(channel)
     req = worldmodel_pb2.PredictRequest(agent_id='test', state=b'test')
     resp = stub.Predict(req, timeout=2)
-    assert resp.prediction == b'fake_pred'
+    # toy model returns a prediction prefixed with b'pred:'
+    assert resp.prediction is not None
+    assert resp.prediction.startswith(b'pred:')
