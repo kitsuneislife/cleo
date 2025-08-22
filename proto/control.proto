@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package cleo.control;
+
+service ControlService {
+  // Request a high-level plan or decision
+  rpc RequestDecision(DecisionRequest) returns (DecisionResponse) {}
+  // Apply an action suggested by the control
+  rpc ApplyAction(ActionRequest) returns (ActionAck) {}
+}
+
+message DecisionRequest {
+  string agent_id = 1;
+  int64 timestamp = 2;
+  bytes state = 3; // serialized current abstract state (JSON/CBOR)
+}
+
+message DecisionResponse {
+  repeated Operator operators = 1;
+}
+
+message Operator {
+  string id = 1;
+  string description = 2;
+  float utility = 3;
+}
+
+message ActionRequest {
+  string operator_id = 1;
+  bytes params = 2; // operator parameters
+}
+
+message ActionAck {
+  bool ok = 1;
+  string message = 2;
+}
