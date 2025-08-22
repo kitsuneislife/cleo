@@ -121,4 +121,4 @@ A adesão a este ciclo de vida de 5 etapas — **Planejar**, **Implementar**, **
 
 ## Notas finais
 
-Seguir este protocolo torna o trabalho previsível, testável e auditável. Para cada nova feature, verifique o checklist deste documento e acrescente observações específicas do componente no repositório (README, ADRs, exemplos e testes).
+Seguir este protocolo torna o trabalho previsível, testável e auditável. Para cada nova feature, verifique a checklist de desenvolvimento em `.kit/development-checklist.md` e acrescente observações específicas do componente no repositório (README, ADRs, exemplos e testes).
