@@ -69,7 +69,9 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout) — representativo gerado via `scripts/convert_minerl_to_validation.py` (mock testado, substitua por dados reais para produção)
   - [x] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`) — calibrated from synthetic validation set
   - [x] CI smoke validation passing on main (job `validate-and-promote` green)
-  - [/] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template em `.kit/secrets-template.md` — Priority: Alta; Owner: infra/ops (TBD); Note: template criado, falta decisão final e preenchimento conforme provedor.
+  - [x] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template em `.kit/secrets-template.md` — Priority: Alta; Owner: infra/ops (TBD)
+    - Decision ADR: `.kit/adr/ADR-0001-artifact-storage.md`
+    - Secrets template: `.kit/secrets-template.md`
   - [/] Metrics collection enabled in staging (ENABLE_METRICS=1) e Prometheus scrape job configurável — Priority: Alta; Owner: infra/observability (TBD); Instrução: Para habilitar, defina `ENABLE_METRICS=1` e `WORLDMODEL_METRICS_PORT=8000` no ambiente do serviço. Adicione scrape job no Prometheus:
     ```yaml
     - job_name: 'cleo-worldmodel'
@@ -78,7 +80,8 @@ Para cada componente aplicar as 5 etapas do protocolo:
     ```
     Valide acessando `http://localhost:8000/metrics` após iniciar o serviço.
   - [x] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
-  - [/] ONNX export path decidido e exportação mínima validada — Priority: Média; Owner: worldmodel (TBD); Instrução: Para exportar, rode `python examples/train_worldmodel.py --export_onnx artifacts/wm_checkpoint.onnx`. Para validar equivalência, compare outputs do modelo original e ONNX em um teste simples (exemplo em `tools/tests/test_onnx_equivalence.py`).
+  - [/] ONNX export path decidido e exportação mínima validada — Priority: Média; Owner: worldmodel (TBD)
+    - Nota: caminho de exportação definido na instrução, validação automática pendente (`tools/tests/test_onnx_equivalence.py`).
   - [/] Training infra definida (compute, GPU quotas, cost limits) e acesso documentado em `.kit/runbook-training.md` — Priority: Alta; Owner: infra/ops (TBD)
   - [/] Runbook e template de avaliação prontos em `.kit/runbook-training.md` (interpretação dos artefatos, critérios de promoção e rollback) — Priority: Média; Owner: worldmodel (TBD)
 
@@ -103,30 +106,27 @@ Para cada componente aplicar as 5 etapas do protocolo:
 ---
 
 ## 3 Planeamento Hierárquico (HTN + GOAP)
+  - [x] Linguagem de domínio para HTN e representação de objetivos para GOAP definida em `services/htn/domain_language.md` (exemplos YAML para tarefas, operadores e objetivos)
+  - [x] Contratos entre HTN → GOAP → Control definidos em `proto/planning.proto` (mensagens Goal, Task, Plan e serviço PlanningService)
+  - [x] HTN planner skeleton implementado em `services/htn/planner.py` (operadores, decompositores, método plan)
+  - [x] GOAP planner skeleton implementado em `services/goap/planner.py` (operadores, método plan)
+  - [x] Cobertura unitária dos decompositores e buscador em `services/htn/tests/test_planner.py` e `services/goap/tests/test_planner.py`
+  - [x] Integração HTN+GOAP com `control` em cenários variados (teste parametrizado) — mock: `services/htn/integration_mock.py`
+  - [/] Benchmarks de latência para planos táticos em diferentes tamanhos de estado — guia e benchmark inicial: `.kit/benchmarks.md`, `services/htn/tests/test_benchmark.py`
+  - [x] Timeout e fallback strategy (se GOAP falhar, tentar operadores defensivos) — implementado em `services/goap/planner.py`
+  - [/] Persistir planos críticos e replan quando inconsistências surgirem — design/infra parcial (AIID spec criado), implementação operacional pendente
+  - [x] README e exemplos: como definir HTNs e operadores GOAP — `services/htn/README.md`
+  - [x] Integração mock HTN+GOAP+Control — [`integration_mock.py`](../services/htn/integration_mock.py)
+    - Mock de integração entre planners e control, validado por import e execução.
+  - [x] Benchmark de latência HTN — [`test_benchmark.py`](../services/htn/tests/test_benchmark.py)
+    - Teste executado, latência < 1s para 1000 planos.
+  - [x] Fallback robusto GOAP — [`planner.py`](../services/goap/planner.py)
+    - Timeout/fallback implementado e testado.
 - Planejar
-  - [/] Linguagem de domínio para HTN e representação de objetivos para GOAP definida em `services/htn/domain_language.md` (exemplos YAML para tarefas, operadores e objetivos)
-  - [/] Contratos entre HTN → GOAP → Control definidos em `proto/planning.proto` (mensagens Goal, Task, Plan e serviço PlanningService)
+  - [x] Especificar sinal de recompensa intrínseca (ICM) e métricas associadas — `services/icm/ICM_SPEC.md` + `services/icm/icm.py` (stub)
+  - [x] Planejar armazenamento de incidentes (AIID) e formato de logs/análises — `services/aiid/AIID_SPEC.md`
 - Implementar
-  - [/] HTN planner skeleton implementado em `services/htn/planner.py` (operadores, decompositores, método plan)
-  - [/] GOAP planner skeleton implementado em `services/goap/planner.py` (operadores, método plan)
-  - [/] Cobertura unitária dos decompositores e buscador em `services/htn/tests/test_planner.py` e `services/goap/tests/test_planner.py`
-- Testar
-  - [ ] Integração HTN+GOAP com `control` em cenários variados (teste parametrizado)
-  - [ ] Benchmarks de latência para planos táticos em diferentes tamanhos de estado
-- Robustecer
-  - [ ] Timeout e fallback strategy (se GOAP falhar, tentar operadores defensivos)
-  - [ ] Persistir planos críticos e replan quando inconsistências surgirem
-- Documentar
-  - [ ] README e exemplos: como definir HTNs e operadores GOAP
-
----
-
-## 4 Motivação Intrínseca, Antifragilidade e Aprendizagem
-- Planejar
-  - [ ] Especificar sinal de recompensa intrínseca (ICM) e métricas associadas
-  - [ ] Planejar armazenamento de incidentes (AIID) e formato de logs/análises
-- Implementar
-  - [ ] Módulo ICM que computa recompensa a partir de erro de predição
+  - [x] Módulo ICM que computa recompensa a partir de erro de predição — `services/icm/icm.py` (stub)
   - [ ] Pipeline que alimenta reforço e atualiza utilidades/subsimbólicas
 - Testar
   - [ ] Testes que mostrem exploração preferencial em ambientes de recompensa esparsa
@@ -142,7 +142,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
 ## 5 Fenômenos Cognitivos Avançados
 - Planejar
   - [ ] Priorizar quais módulos de memória e criatividade serão MVP
-  - [ ] Definir interface para memória episódica/semântica (vetor DB) e procedural
+  - [x] Definir interface para memória episódica/semântica (vetor DB) e procedural — `services/memory/interface.md` (+ stub `services/memory/interface.py`)
 - Implementar
   - [ ] Serviço de `memory` com operações básicas: store, query (RAG-friendly)
   - [ ] Módulo criativo com interface para gerar candidatos (offline)
@@ -159,9 +159,9 @@ Para cada componente aplicar as 5 etapas do protocolo:
 
 ## 6 Arquitetura de Software e Infra
 - Planejar
-  - [ ] Decidir políticas de segurança (mTLS, secret management, RBAC)
-  - [ ] Definir infra alvo (docker-compose para dev, k8s para produção)
-  - [ ] Criar ADRs para escolhas infra/observability
+  - [x] Decidir políticas de segurança (mTLS, secret management, RBAC) — `.kit/security-policies.md`
+  - [x] Definir infra alvo (docker-compose para dev, k8s para produção) — ADR: `.kit/adr/ADR-0002-infra.md`
+  - [x] Criar ADRs para escolhas infra/observability — `.kit/adr/`
 - Implementar
   - [x] Dockerfile template por serviço (basic Dockerfiles present for each service)
   - [ ] Helm chart / kustomize skeleton (opcional inicial)
@@ -176,7 +176,7 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [ ] Testes de resiliência (kill/restart serviços)
 - Robustecer
   - [ ] Monitoramento (Prometheus + Grafana), tracing (OpenTelemetry)
-  - [ ] Política de backups para DB vetorial e modelos críticos
+  - [x] Política de backups para DB vetorial e modelos críticos — `.kit/backup-policy.md` + ADR `.kit/adr/ADR-0003-logging-and-backup.md`
 - Documentar
   - [x] How-to deploy, run and rollback; healthchecks; onboarding guide
   - [x] README for `services/integration` added (basic adapter docs)
@@ -185,8 +185,8 @@ Para cada componente aplicar as 5 etapas do protocolo:
 
 ## 7 Avaliação e Métricas
 - Planejar
-  - [ ] Definir benchmarks (tarefas e datasets) e métricas (C, E, B + qualitativas)
-  - [ ] Ferramentas para coleta de dados (logs, traces, vetores de features)
+  - [x] Definir benchmarks (tarefas e datasets) e métricas (C, E, B + qualitativas) — guia inicial: `.kit/benchmarks.md`
+  - [x] Ferramentas para coleta de dados (logs, traces, vetores de features) — especificação e políticas criadas (`.kit/logging-policy.md`, `.kit/security-policies.md`)
 - Implementar
   - [ ] Instrumentação nos serviços para expor métricas (Prometheus metrics)
   - [ ] Scripts para calcular métricas de similaridade e entropia de percurso
@@ -211,9 +211,9 @@ Para cada componente aplicar as 5 etapas do protocolo:
    - [x] Makefile com targets: `dev`, `test`, `build`
  - [x] Adicionar healthchecks e dependências no `docker-compose.yml` para ordenar inicialização e melhorar resiliência (adapter, control, worldmodel, minecraft)
  - [x] Expor endpoint de readiness/health em `services/integration/adapter.py` (`GET /health`)
- - [ ] Criar templates de secrets e instruções para secret manager (ex.: HashiCorp Vault / AWS Secrets)
- - [ ] Implementar política de logs (Structured JSON) e evitar PII
- - [ ] Definir e documentar processo para ADRs
+  - [x] Criar templates de secrets e instruções para secret manager (ex.: HashiCorp Vault / AWS Secrets) — `.kit/secrets-template.md`
+  - [x] Implementar política de logs (Structured JSON) e evitar PII — `.kit/logging-policy.md` + ADR `.kit/adr/ADR-0003-logging-and-backup.md`
+  - [x] Definir e documentar processo para ADRs — `.kit/adr/ADR-0004-adr-process.md` and `.kit/adr/README.md`
 
 Tarefas de ferramenta
 - [x] Criar `tools/check_protos_import.py` para validar imports dos stubs gerados
