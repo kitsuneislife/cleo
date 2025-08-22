@@ -107,9 +107,9 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [/] Linguagem de domínio para HTN e representação de objetivos para GOAP definida em `services/htn/domain_language.md` (exemplos YAML para tarefas, operadores e objetivos)
   - [/] Contratos entre HTN → GOAP → Control definidos em `proto/planning.proto` (mensagens Goal, Task, Plan e serviço PlanningService)
 - Implementar
-  - [ ] Implementar HTN planner skeleton (gerar tasks de alto nível)
-  - [ ] Implementar GOAP planner (operadores com precondições/efeitos e heurística A*)
-  - [ ] Cobertura unitária dos decompositores e do buscador
+  - [/] HTN planner skeleton implementado em `services/htn/planner.py` (operadores, decompositores, método plan)
+  - [/] GOAP planner skeleton implementado em `services/goap/planner.py` (operadores, método plan)
+  - [/] Cobertura unitária dos decompositores e buscador em `services/htn/tests/test_planner.py` e `services/goap/tests/test_planner.py`
 - Testar
   - [ ] Integração HTN+GOAP com `control` em cenários variados (teste parametrizado)
   - [ ] Benchmarks de latência para planos táticos em diferentes tamanhos de estado
