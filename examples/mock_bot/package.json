@@ -1,0 +1,9 @@
+{
+  "name": "cleo-mock-bot",
+  "version": "0.1.0",
+  "description": "Mock bot to exercise adapter in CI/compose",
+  "main": "bot.js",
+  "dependencies": {
+    "axios": "^1.5.0"
+  }
+}

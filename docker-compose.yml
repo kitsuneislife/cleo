@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  control:
+    build:
+      context: .
+      dockerfile: services/control/Dockerfile
+    container_name: cleo_control
+    environment:
+      - CONTROL_PORT=50061
+      - WORLD_MODEL_HOST=worldmodel
+      - WORLD_MODEL_PORT=50063
+      - ENABLE_METRICS=0
+    ports:
+      - "50061:50061"
+    volumes:
+      - control_data:/data
+
+  worldmodel:
+    build:
+      context: .
+      dockerfile: services/worldmodel/Dockerfile
+    container_name: cleo_worldmodel
+    environment:
+      - WORLD_MODEL_PORT=50063
+    ports:
+      - "50063:50063"
+
+  execution:
+    build:
+      context: .
+      dockerfile: services/execution/Dockerfile
+    container_name: cleo_execution
+    environment:
+      - EXECUTION_PORT=50065
+    ports:
+      - "50065:50065"
+
+  adapter:
+    build:
+      context: .
+      dockerfile: services/integration/Dockerfile
+    container_name: cleo_adapter
+    environment:
+      - ADAPTER_PORT=8001
+      - CONTROL_HOST=control
+      - CONTROL_PORT=50061
+    ports:
+      - "8001:8001"
+
+  bot-sim:
+    build:
+      context: examples/mock_bot
+      dockerfile: Dockerfile
+    container_name: cleo_bot_sim
+    environment:
+      - ADAPTER_URL=http://adapter:8001/observe
+    depends_on:
+      - adapter
+
+volumes:
+  control_data:

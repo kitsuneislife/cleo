@@ -3,6 +3,7 @@
 Objetivo: checklist orientada por etapas (Planejar → Implementar → Testar → Robustecer → Documentar) mapeada para as áreas do manifesto (`.kit/summary.md`) e seguindo o protocolo (`.kit/protocol.md`). Use esta lista como referência em PRs, reviews e ADRs.
 
 Instruções rápidas
+- Lembre-se de atualizar o status das tasks nesse arquivo SEMPRE.
 - Para cada item marque [ ] quando pendente e [x] quando concluído.
 - Crie um ADR para decisões arquiteturais importantes.
 - Atualize o `README.md` do serviço e a checklist neste arquivo sempre que acrescentar um novo serviço ou mudança de contrato.
