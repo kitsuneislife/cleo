@@ -15,9 +15,9 @@ services:
       - control_data:/data
     healthcheck:
       test: ["CMD-SHELL", "/bin/sh -c 'nc -z localhost 50061 || exit 1'"]
-  interval: "30s"
-  timeout: "10s"
-  retries: 8
+      interval: "30s"
+      timeout: "10s"
+      retries: 8
 
   worldmodel:
     build:
@@ -30,9 +30,9 @@ services:
       - "50063:50063"
     healthcheck:
       test: ["CMD-SHELL", "/bin/sh -c 'nc -z localhost 50063 || exit 1'"]
-  interval: "30s"
-  timeout: "10s"
-  retries: 8
+      interval: "30s"
+      timeout: "10s"
+      retries: 8
 
   execution:
     build:
@@ -56,10 +56,10 @@ services:
     ports:
       - "8001:8001"
     healthcheck:
-  test: ["CMD-SHELL", "/bin/sh -c 'curl -sf http://localhost:8001/health || exit 1'"]
-  interval: "30s"
-  timeout: "10s"
-  retries: 8
+      test: ["CMD-SHELL", "/bin/sh -c 'curl -sf http://localhost:8001/health || exit 1'"]
+      interval: "30s"
+      timeout: "10s"
+      retries: 8
 
   bot-sim:
     build:
