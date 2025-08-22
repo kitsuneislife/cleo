@@ -44,11 +44,11 @@ Para cada componente aplicar as 5 etapas do protocolo:
   - [x] Testes de integração: `control` ↔ `worldmodel` ↔ `execution` no `docker-compose` (smoke via local stubs)
   - [ ] E2E smoke: executar cenário de alto-nível (ex.: alcançar e minerar um bloco)
 - Robustecer
-  - [ ] Instrumentar métricas (latência, taxa de decisões por segundo)
+  - [x] Instrumentar métricas (latência, taxa de decisões por segundo) (opt-in via ENABLE_METRICS)
   - [x] Adicionar circuit-breaker e retries para chamadas externas (basic retry logic present in worldmodel call handling)
   - [ ] Definir limites de recursos para containers
 - Documentar
-  - [ ] README com contrato do serviço e exemplos de chamadas
+  - [x] README com contrato do serviço e exemplos de chamadas
   - [ ] ADR se a implementação divergir do design híbrido Soar/ACT-R
 
 ---

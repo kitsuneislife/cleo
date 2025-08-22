@@ -4,6 +4,7 @@ python -m grpc_tools.protoc -I../../proto --python_out=. --grpc_python_out=. ../
 """
 import logging
 import os
+import time
 from concurrent import futures
 import grpc
 
@@ -27,9 +28,26 @@ except Exception:
 # instantiate a process-local store (file-based by default)
 store = DecisionStore()
 
+# Optional Prometheus metrics (enabled only when ENABLE_METRICS=1).
+# This avoids binding sockets during unit tests unless explicitly requested.
+_METRICS_ENABLED = os.environ.get('ENABLE_METRICS', '0') == '1'
+_METRICS = {}
+if _METRICS_ENABLED:
+    try:
+        from prometheus_client import start_http_server, Counter, Histogram
+
+        metrics_port = int(os.environ.get('CONTROL_METRICS_PORT', '8000'))
+        start_http_server(metrics_port)
+        _METRICS['decision_count'] = Counter('cleo_control_decisions_total', 'Total decision requests')
+        _METRICS['decision_latency_seconds'] = Histogram('cleo_control_decision_latency_seconds', 'Decision latency (s)')
+        logging.info(f"Prometheus metrics enabled on port {metrics_port}")
+    except Exception:
+        logging.exception('Failed to enable prometheus_client metrics; continuing without metrics')
+
 class ControlServicer(control_pb2_grpc.ControlServiceServicer if control_pb2_grpc else object):
     def RequestDecision(self, request, context):
         logging.info(f"Decision request from {request.agent_id}")
+        start_ts = time.time()
         # Optionally call worldmodel to get prediction
         if worldmodel_pb2_grpc:
             try:
@@ -55,8 +73,16 @@ class ControlServicer(control_pb2_grpc.ControlServiceServicer if control_pb2_grp
                 op.id = o['id']
                 op.description = o['description']
                 op.utility = o['utility']
-            return resp
-        return None
+        else:
+            resp = None
+        # observe metrics if available
+        try:
+            if _METRICS_ENABLED and _METRICS:
+                _METRICS['decision_count'].inc()
+                _METRICS['decision_latency_seconds'].observe(time.time() - start_ts)
+        except Exception:
+            logging.debug('Failed to record metrics')
+        return resp
 
     def ApplyAction(self, request, context):
         logging.info(f"Apply action {request.operator_id}")

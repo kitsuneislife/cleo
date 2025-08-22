@@ -11,10 +11,24 @@ services:
     image: scratch
     container_name: cleo_worldmodel
     command: ["/bin/sh", "-c", "sleep infinity"]
+    ports:
+      - "50063:50063"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
   control:
     image: scratch
     container_name: cleo_control
     command: ["/bin/sh", "-c", "sleep infinity"]
+    ports:
+      - "50061:50061"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
 
 # Rede de exemplo para desenvolvimento
 networks:
