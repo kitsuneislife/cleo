@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+// Contrato mínimo para comunicação entre HTN, GOAP e Control
+package planning;
+
+// Mensagem de objetivo GOAP
+message Goal {
+  string description = 1;
+}
+
+// Mensagem de tarefa HTN
+message Task {
+  string name = 1;
+  repeated string subtasks = 2;
+}
+
+// Mensagem de plano
+message Plan {
+  repeated Task tasks = 1;
+  repeated Goal goals = 2;
+}
+
+// Serviço de planejamento
+service PlanningService {
+  rpc GetPlan(Goal) returns (Plan);
+}
+
+// Exemplo de uso:
+// Goal: { description: "agente.tem_item('diamante')" }
+// Plan: { tasks: [ { name: "MinerarBloco", subtasks: ["IrAteBloco", "UsarFerramenta"] } ], goals: [ { description: "agente.tem_item('diamante')" } ] }
