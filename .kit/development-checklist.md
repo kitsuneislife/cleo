@@ -63,10 +63,10 @@ Para cada componente aplicar as 5 etapas do protocolo:
   ## Pre-training gate (must complete before large-scale training)
   - [ ] Validation dataset available at `data/worldmodel/validation.jsonl` (representative holdout)
   - [ ] Calibrate thresholds from validation dataset and commit `services/worldmodel/THRESHOLDS.json` (`tools/calibrate_thresholds.py`)
-  - [ ] CI smoke validation passing on main (job `validate-and-promote` green)
+  - [x] CI smoke validation passing on main (job `validate-and-promote` green)
   - [ ] Artifact storage & promotion plan configured (S3 / MLFlow / Release) and secrets/template in repo
   - [ ] Metrics collection enabled in staging (ENABLE_METRICS=1) and Prometheus scrape job configured
-  - [ ] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
+  - [x] Data pipeline tested: `scripts/prepare_worldmodel_dataset.py` produces training JSONL/NPZ consumed by trainer
   - [ ] ONNX export path decided and minimal export validated (or plan documented if deferred)
   - [ ] Training infra defined (compute, GPU quotas, cost limits) and access verified
   - [ ] Runbook and evaluation template ready (how to interpret `artifacts/metrics.json`, `onnx-check.npz`, and promotion criteria)
